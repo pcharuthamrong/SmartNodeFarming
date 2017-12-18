@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="refresh" content="5"/>
+	<meta charset='utf-8'>
+	<meta http-equiv='refresh' content='10'/>
 	<title>Smart Node Farming Console</title>
 	<style>
 		html{
@@ -12,23 +12,38 @@
 </head>
 
 <body>
-	<h1 align="center">Smart Node Farming Console</h1></br></br>
+	<h1 align='center'>Smart Node Farming Console</h1>
+	*This page will refresh every 10 seconds.
+	</br></br></br>
 
-	<table style="width:100%;" class="plantStatus">
-		<tr align="left">
+	<table style='width:100%;' class='plantStatus'>
+		<tr align='left'>
 			<th>Humidity Level</th>
 			<th>Temperature (Celsius)</th>
 			<th>Light Level</th>
 			<th>Last Watered</th>
 		</tr>
-		<tr align="left">
-			<th><p class="humidity"></p></th>
-			<th><p class="temperature"></p></th>
-			<th><p class="light"></p></th>
-			<th><p class="lastWatered"></p></th>
+		<tr align='left'>
+			<th><p class='humidity'></p></th>
+			<th><p class='temperature'></p></th>
+			<th><p class='light'></p></th>
+			<th><p class='lastWatered'></p></th>
 		</tr>
 	</div>
 	
-	<script src="script.js"></script>
+	<div class='form'>
+		Ideal Humidity Level:
+		<input type='number' class='minHumid' min='0' max='10'> to
+		<input type='number' class='maxHumid' min='0' max='10'></br>
+		Ideal Temperature Level:
+		<input type='number' class='minTemp' min='0' max='100'> to
+		<input type='number' class='maxTemp' min='0' max='100'></br>
+		Ideal Light Level:
+		<input type='number' class='minLight' min='0' max='10'> to
+		<input type='number' class='maxLight' min='0' max='10'></br>
+		<input type='submit' value='Change Setting' class='changeSetting'></br></br>
+	</div>
+	
+	<script src='script.js'></script>
 </body>
 </html>
