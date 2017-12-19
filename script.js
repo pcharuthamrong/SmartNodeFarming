@@ -15,27 +15,22 @@ function setValues() {
 	var maxH = maxHumid.value;
 	var minT = minTemp.value;
 	var maxT = maxTemp.value;
-	var minL = minLight.value;
-	var maxL = maxLight.value;
 	
 	localStorage.setItem('minHumid', minH);
 	localStorage.setItem('maxHumid', maxH);
 	localStorage.setItem('minTemp', minT);
 	localStorage.setItem('maxTemp', maxT);
-	localStorage.setItem('minLight', minL);
-	localStorage.setItem('maxLight', maxL);
 	
 	alert('Preference has been changed to:\n' + 
 		'Humidity: ' + minH + ' - ' + maxH + '\n' + 
-		'Temperature: ' + minT + ' - ' + maxT + '\n' + 
-		'Light: ' + minL + ' - ' + maxL);
+		'Temperature: ' + minT + ' - ' + maxT);
 }
 
 function setPlantStatus(h, t, ldp) {
 	var minRec, maxRec, min, max;
 	
 	humidity.textContent = h;
-	min = 0;	max = 10;
+	min = 0;	max = 2000;
 	minRec = localStorage.getItem('minHumid');
 	maxRec = localStorage.getItem('maxHumid');
 	humidity.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, h);
