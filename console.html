@@ -31,16 +31,15 @@
 	
 	<div class='form'>
 		Ideal Humidity Level:
-		<input type='number' class='minHumid' min='0' max='10'> to
-		<input type='number' class='maxHumid' min='0' max='10'></br>
+		<input type='number' class='minHumid' min='0' max='4095'> to
+		<input type='number' class='maxHumid' min='0' max='4095'></br>
 		Ideal Temperature Level:
 		<input type='number' class='minTemp' min='0' max='100'> to
 		<input type='number' class='maxTemp' min='0' max='100'></br>
-		Ideal Light Level:
-		<input type='number' class='minLight' min='0' max='10'> to
-		<input type='number' class='maxLight' min='0' max='10'></br>
-		<input type='submit' value='Change Setting' class='changeSetting'></br></br>
+		<button class='changeSetting'>Change Setting</button></br></br>
 	</div>
+	
+	<iframe width="450" height="250" style="border: 1px solid #cccccc;" src="http://api.thingspeak.com/channels/368328/charts/1?api_key=KG5Q1Q7LHIIHIMF3&results=20&title=Humidity%20Chart&xaxis=Time&yaxis=Humidity%20Level"></iframe>
 	
 	<script src='script.js'></script>
 </body>
