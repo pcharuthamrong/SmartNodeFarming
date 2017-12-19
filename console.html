@@ -2,7 +2,6 @@
 <html>
 <head>
 	<meta charset='utf-8'>
-	<meta http-equiv='refresh' content='10'/>
 	<title>Smart Node Farming Console</title>
 	<style>
 		html{
@@ -13,7 +12,6 @@
 
 <body>
 	<h1 align='center'>Smart Node Farming Console</h1>
-	*This page will refresh every 10 seconds.
 	</br></br></br>
 
 	<table style='width:100%;' class='plantStatus'>
@@ -39,7 +37,7 @@
 		<button class='changeSetting'>Change Setting</button></br></br>
 	</div>
 	
-	<iframe width="450" height="250" style="border: 1px solid #cccccc;" src="http://api.thingspeak.com/channels/368328/charts/1?api_key=KG5Q1Q7LHIIHIMF3&results=20&title=Humidity%20Chart&xaxis=Time&yaxis=Humidity%20Level"></iframe>
+	<iframe width="450" height="250" style="border: 1px solid #cccccc;" src="http://api.thingspeak.com/channels/368328/charts/1?api_key=KG5Q1Q7LHIIHIMF3&results=20&title=Humidity%20Chart&xaxis=Time&yaxis=Humidity%20Level&dynamic=true&update=10"></iframe>
 	
 	<script src='script.js'></script>
 </body>
