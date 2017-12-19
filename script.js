@@ -1,15 +1,12 @@
 var humidity = document.querySelector('.humidity');
 var temperature = document.querySelector('.temperature');
-var light = document.querySelector('.light');
-var lastWatered = document.querySelector('.lastWatered');
+var dataFrom = document.querySelector('.dataFrom');
 
 var changeSetting = document.querySelector('.changeSetting');
 var minHumid = document.querySelector('.minHumid');
 var maxHumid = document.querySelector('.maxHumid');
 var minTemp = document.querySelector('.minTemp');
 var maxTemp = document.querySelector('.maxTemp');
-var minLight = document.querySelector('.minLight');
-var maxLight = document.querySelector('.maxLight');
 
 changeSetting.addEventListener('click', setValues);
 
@@ -34,7 +31,7 @@ function setValues() {
 		'Light: ' + minL + ' - ' + maxL);
 }
 
-function setPlantStatus(h, t, l, lw) {
+function setPlantStatus(h, t, ldp) {
 	var minRec, maxRec, min, max;
 	
 	humidity.textContent = h;
@@ -49,13 +46,7 @@ function setPlantStatus(h, t, l, lw) {
 	maxRec = localStorage.getItem('maxTemp');
 	temperature.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, t);
 	
-	light.textContent = l;
-	min = 0;	max = 10;
-	minRec = localStorage.getItem('minLight');
-	maxRec = localStorage.getItem('maxLight');
-	light.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, l);
-	
-	lastWatered.textContent = lw;
+	dataFrom.textContent = ldp;
 }
 
 function backgroundColor(low, high, recLow, recHigh, current) {
@@ -71,9 +62,25 @@ function backgroundColor(low, high, recLow, recHigh, current) {
 	return 'white';
 }
 
-var temp1 = Math.floor(Math.random() * 12) + 1;
-var temp2 = Math.floor(Math.random() * 100) + 1;
-var temp3 = Math.floor(Math.random() * 12) + 1;
-var d = new Date();
+function getData(url) {
+	var xhr= new XMLHttpRequest();
+	xhr.open('GET', url, true);
+	
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == 4) {
+			var status = JSON.parse(xhr.responseText);
+			//alert(xhr.responseText);
+			
+			var hValue = status.feeds[0].field1;
+			var date = new Date(status.feeds[0].created_at);
+			
+			setPlantStatus(hValue,temp2,date);
+		}
+	}
+	
+	xhr.send();
+}
 
-setPlantStatus(temp1,temp2,temp3,d);
+var temp2 = Math.floor(Math.random() * 100) + 1;
+
+getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
