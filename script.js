@@ -68,6 +68,7 @@ function getData(url) {
 			
 			var hValue = status.feeds[0].field1;
 			var date = new Date(status.feeds[0].created_at);
+			var temp2 = Math.floor(Math.random() * 100) + 1;
 			
 			setPlantStatus(hValue,temp2,date);
 		}
@@ -76,6 +77,7 @@ function getData(url) {
 	xhr.send();
 }
 
-var temp2 = Math.floor(Math.random() * 100) + 1;
-
 getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
+setInterval(function() {
+	getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
+}, 10000);
