@@ -17,6 +17,13 @@ function setValues() {
 	var minT = minTemp.value;
 	var maxT = maxTemp.value;
 	
+	if(minH < 0 || minH > 4095 || maxH < 0 || maxH > 4095 ||
+		minT < 0 || minT > 100 || maxT < 0 || maxT > 100 ||
+		maxH < minH || maxT < minT) {
+		alert('Invalid Preference');
+		return;
+	}
+	
 	localStorage.setItem('minHumid', minH);
 	localStorage.setItem('maxHumid', maxH);
 	localStorage.setItem('minTemp', minT);
@@ -64,7 +71,7 @@ function backgroundColor(low, high, recLow, recHigh, current) {
 	if(recLow == null || recHigh == null) {
 		return 'white';
 	}
-	if(current > recLow && current < recHigh) {
+	if(current >= recLow && current <= recHigh) {
 		return 'green';
 	}
 	return 'white';
@@ -79,13 +86,13 @@ function getData(url) {
 			var status = JSON.parse(xhr.responseText);
 			//alert(xhr.responseText);
 			
-			var hValue = status.feeds[0].field1;
+			var hValue = Number(status.feeds[0].field1);
 			var date = new Date(status.feeds[0].created_at);
-			var temp2 = Math.floor(Math.random() * 100) + 1;
+			var temp2 = Math.floor(Math.random() * 50) + 1;
 			
 			if(currentDP === -1 || currentDP.getTime() !== date.getTime()) {
 				appendPlantStatus(hValue,temp2,date);
-				if(rowCount >= 5) {
+				if(rowCount > 5) {
 					removeLastRow();
 				}
 			}
