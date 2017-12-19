@@ -1,12 +1,13 @@
-var humidity = document.querySelector('.humidity');
-var temperature = document.querySelector('.temperature');
-var dataFrom = document.querySelector('.dataFrom');
+var table = document.querySelector('.plantStatusTable');
+
+var rowCount = 0;
 
 var changeSetting = document.querySelector('.changeSetting');
 var minHumid = document.querySelector('.minHumid');
 var maxHumid = document.querySelector('.maxHumid');
 var minTemp = document.querySelector('.minTemp');
 var maxTemp = document.querySelector('.maxTemp');
+var currentDP = -1;
 
 changeSetting.addEventListener('click', setValues);
 
@@ -26,22 +27,34 @@ function setValues() {
 		'Temperature: ' + minT + ' - ' + maxT);
 }
 
-function setPlantStatus(h, t, ldp) {
+function appendPlantStatus(h, t, ldp) {
 	var minRec, maxRec, min, max;
+	var row = table.insertRow(1);
 	
-	humidity.textContent = h;
+	var hCell = row.insertCell(0);
+	var tCell = row.insertCell(1);
+	var dCell = row.insertCell(2);
+	
+	hCell.textContent = h;
 	min = 0;	max = 2000;
 	minRec = localStorage.getItem('minHumid');
 	maxRec = localStorage.getItem('maxHumid');
-	humidity.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, h);
+	hCell.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, h);
 	
-	temperature.textContent = t;
+	tCell.textContent = t;
 	min = 0;	max = 40;
 	minRec = localStorage.getItem('minTemp');
 	maxRec = localStorage.getItem('maxTemp');
-	temperature.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, t);
+	tCell.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, t);
 	
-	dataFrom.textContent = ldp;
+	dCell.textContent = ldp;
+	
+	rowCount += 1;
+}
+
+function removeLastRow() {
+	table.deleteRow(-1);
+	rowCount -= 1;
 }
 
 function backgroundColor(low, high, recLow, recHigh, current) {
@@ -70,7 +83,13 @@ function getData(url) {
 			var date = new Date(status.feeds[0].created_at);
 			var temp2 = Math.floor(Math.random() * 100) + 1;
 			
-			setPlantStatus(hValue,temp2,date);
+			if(currentDP === -1 || currentDP.getTime() !== date.getTime()) {
+				appendPlantStatus(hValue,temp2,date);
+				if(rowCount >= 5) {
+					removeLastRow();
+				}
+			}
+			currentDP = date;
 		}
 	}
 	
