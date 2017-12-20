@@ -47,13 +47,14 @@ function setValues() {
 		'Temperature: ' + minT + ' - ' + maxT);
 }
 
-function appendPlantStatus(h, t, ldp) {
+function appendPlantStatus(h, t, aH, ldp) {
 	var minRec, maxRec, min, max;
 	var row = table.insertRow(1);
 	
 	var hCell = row.insertCell(0);
 	var tCell = row.insertCell(1);
-	var dCell = row.insertCell(2);
+	var aCell = row.insertCell(2);
+	var dCell = row.insertCell(3);
 	
 	hCell.textContent = h;
 	min = 0;	max = 2000;
@@ -67,6 +68,7 @@ function appendPlantStatus(h, t, ldp) {
 	maxRec = localStorage.getItem('maxTemp');
 	tCell.style.backgroundColor = backgroundColor(min, max, minRec, maxRec, t);
 	
+	aCell.textContent = aH;
 	dCell.textContent = ldp;
 	
 	rowCount += 1;
@@ -99,20 +101,22 @@ function getData(url) {
 			var status = JSON.parse(xhr.responseText);
 			//alert(xhr.responseText);
 			
-			if(status.feeds[0].field1 == null ||
-			status.feeds[0].field2 == null) {
+			if(status.feeds[0].field1 == null) {
+			//|| status.feeds[0].field2 == null) {
 				return;
 			}
 			
 			var hValue = Number(status.feeds[0].field1);
 			var date = new Date(status.feeds[0].created_at);
-			var tValue = Number(status.feeds[0].field2);
+			//var tValue = Number(status.feeds[0].field2);
+			var tValue = localStorage.getItem('temp');
+			var airH = localStorage.getItem('humid');
 			
 			if(currentDP != -1 && currentDP.getTime() == date.getTime()) {
 				return;
 			}
 				
-			appendPlantStatus(hValue,tValue,date);
+			appendPlantStatus(hValue,tValue, airH, date);
 			if(rowCount > 5) {
 				removeLastRow();
 			}
@@ -121,8 +125,8 @@ function getData(url) {
 			var out = '';
 			var threshold = localStorage.getItem('minHumid');
 			if(threshold != null && hValue < threshold) {
-				//sendWatered(1, hValue, tValue);
-				out += 'Soil humidity is too low. Please water your plant.\n';
+				sendWatered(1, hValue, tValue);
+				out += 'Soil humidity is too low. Watering your plant.\n';
 			}
 			var threshold = localStorage.getItem('maxHumid');
 			if(threshold != null && hValue > threshold) {
@@ -136,7 +140,9 @@ function getData(url) {
 			if(threshold != null && tValue > threshold) {
 				out += 'Your plant is too hot.\n';
 			}
-			alert(out);
+			if(out != '') {
+				alert(out);
+			}
 		}
 	}
 	
@@ -159,7 +165,29 @@ function sendWatered(value, f1, f2) {
 	xhr.send('field3=' + value + '&field1=' + f1 + '&field2=' + f2);
 }
 
+function updateTemp() {
+	var url = 'http://api.openweathermap.org/data/2.5/weather?appid=18ba673a138ff53fd8d9035618f9e4a4&id=1609350&units=metric';
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', url, true);
+	
+	xhr.onreadystatechange = function() {
+		if(xhr.readyState == 4 && xhr.status == 200) {
+			var status = JSON.parse(xhr.responseText);
+			//alert(xhr.responseText);
+			
+			localStorage.setItem('temp', status.main.temp);
+			localStorage.setItem('humid', status.main.humidity);
+		}
+	}
+	
+	xhr.send();
+}
+
+updateTemp();
 getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
 setInterval(function() {
 	getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
 }, 10000);
+setInterval(function() {
+	updateTemp();
+}, 600000);
