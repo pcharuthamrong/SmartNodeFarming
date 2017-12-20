@@ -118,10 +118,25 @@ function getData(url) {
 			}
 			currentDP = date;
 			
-			var threshold = localStorage.getItem('minHumid')
+			var out = '';
+			var threshold = localStorage.getItem('minHumid');
 			if(threshold != null && hValue < threshold) {
-				sendWatered(1, hValue, tValue);
+				//sendWatered(1, hValue, tValue);
+				out += 'Soil humidity is too low. Please water your plant.\n';
 			}
+			var threshold = localStorage.getItem('maxHumid');
+			if(threshold != null && hValue > threshold) {
+				out += 'Soil humidity is too high. Please allow the soil to drain.\n';
+			}
+			var threshold = localStorage.getItem('minTemp');
+			if(threshold != null && tValue < threshold) {
+				out += 'Your plant is too cold.\n';
+			}
+			var threshold = localStorage.getItem('maxTemp');
+			if(threshold != null && tValue > threshold) {
+				out += 'Your plant is too hot.\n';
+			}
+			alert(out);
 		}
 	}
 	
