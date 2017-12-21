@@ -125,8 +125,10 @@ function getData(url) {
 			var out = '';
 			var threshold = localStorage.getItem('minHumid');
 			if(threshold != null && hValue < threshold) {
-				sendWatered(1, hValue, tValue);
+				sendWatered(1);
 				out += 'Soil humidity is too low. Watering your plant.\n';
+			} else {
+				sendWatered(0);
 			}
 			var threshold = localStorage.getItem('maxHumid');
 			if(threshold != null && hValue > threshold) {
@@ -149,20 +151,21 @@ function getData(url) {
 	xhr.send();
 }
 
-function sendWatered(value, f1, f2) {
-	var url = 'https://api.thingspeak.com/update?api_key=I4FUQAC7QSAXN7UR'
+function sendWatered(value) {
+	var url = 'https://api.thingspeak.com/update?api_key=WM173L1UK0AMQN9B'
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', url, true);
 	
 	xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState == 4 && xhr.status == 200) {
-			if(value == 1) {
+			if(value == 1 && xhr.responseText != 0) {
 				alert('Your plant is watered.');
 			}
+			//alert(xhr.responseText);
 		}
 	}
-	xhr.send('field3=' + value + '&field1=' + f1 + '&field2=' + f2);
+	xhr.send('field1=' + value);
 }
 
 function updateTemp() {
@@ -187,7 +190,7 @@ updateTemp();
 getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
 setInterval(function() {
 	getData('https://api.thingspeak.com/channels/368328/feeds.json?api_key=KG5Q1Q7LHIIHIMF3&results=1');
-}, 10000);
+}, 15000);
 setInterval(function() {
 	updateTemp();
 }, 600000);
